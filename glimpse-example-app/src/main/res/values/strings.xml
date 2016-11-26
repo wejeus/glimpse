@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Glimpse Example</string>
+    <string name="service_name_system_notification_listener">Glimpse Example Notification Listener</string>
+    <string name="notification_action_done">Done</string>
+</resources>
