@@ -1,12 +1,19 @@
 package com.isalldigital.glimpse;
 
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,6 +22,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.prefs.Preferences;
 
 import static com.isalldigital.glimpse.GlimpseActions.ACTION_1;
 import static com.isalldigital.glimpse.GlimpseActions.ACTION_2;
@@ -30,16 +38,16 @@ import static com.isalldigital.glimpse.GlimpseActions.NOT_SET;
 
 public class GlimpseManager {
 
+    private static final String PREF_STATE_NOTIFICATION_QUEUE = "pref_state_notification_queue";
+
     private static GlimpseManager instance;
     private final Context context;
-
     private Queue<Integer> notificationsQueue = new LinkedBlockingQueue<>(GlimpseConfig.getMaxNumNotifications());
-    private Set<Integer> idsInUse = new HashSet<>();
 
     public static synchronized GlimpseManager getInstance(Context context) {
         if (instance == null) {
             instance = new GlimpseManager(context);
-            // TODO: Read state from preferences
+            restoreFromPersistedState(context);
         }
         return instance;
     }
@@ -49,15 +57,40 @@ public class GlimpseManager {
     }
 
     private void addId(int id) {
-        idsInUse.add(id);
         notificationsQueue.add(id);
-        // TODO: update state in preferences
+        persistState();
     }
 
     private void removeId(int id) {
         notificationsQueue.remove(id);
-        idsInUse.remove(id);
-        // TODO: update state in preferences
+        persistState();
+    }
+
+    public Queue<Integer> getActiveNotificationIds() {
+        return notificationsQueue;
+    }
+
+    private static void restoreFromPersistedState(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(GlimpseConfig.packageName, Context.MODE_PRIVATE);
+        try {
+            JSONArray jsonArray = new JSONArray(pref.getString(PREF_STATE_NOTIFICATION_QUEUE, "[]"));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                instance.notificationsQueue.add(jsonArray.getInt(i));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void persistState() {
+        SharedPreferences pref = context.getSharedPreferences(GlimpseConfig.packageName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        JSONArray jsonArray = new JSONArray();
+        for (Integer i : notificationsQueue) {
+            jsonArray.put(i);
+        }
+        editor.putString(PREF_STATE_NOTIFICATION_QUEUE, jsonArray.toString());
+        editor.commit();
     }
 
     /**
@@ -76,10 +109,10 @@ public class GlimpseManager {
 
     private int getNextIntegerNotInUse() {
         Random rand = new Random();
-        int candidate = rand.nextInt();
+        int candidate;
         while (true) {
             candidate = rand.nextInt();
-            if (idsInUse.contains(candidate)) {
+            if (notificationsQueue.contains(candidate)) {
                 continue;
             }
             break;

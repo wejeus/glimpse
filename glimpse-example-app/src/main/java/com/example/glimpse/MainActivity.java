@@ -4,14 +4,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.isalldigital.glimpse.GlimpseManager;
 import com.isalldigital.glimpse.types.SimpleGlimpse;
+
+import java.util.Queue;
 
 public class MainActivity extends AppCompatActivity {
 
-    int notificationId = 0;
-    int i = 0;
-
+    private TextView activeNotifications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +25,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SimpleGlimpse.Builder builder = new SimpleGlimpse.Builder(MainActivity.this, NotificationActionReceiver.SIMPLE_NOTIFICATION_REQUEST_CODE);
-
-                notificationId = builder
-                        .setContentTitle("NotificationTitle")
-                        .setContentText("NotificationText: " + i++)
+                int notificationId = builder
+                        .setContentTitle("Example 1")
+                        .setContentText("Notification of type 1")
                         .build()
                         .send();
+                refreshActiveNotifications();
             }
         });
 
@@ -37,15 +39,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SimpleGlimpse.Builder builder = new SimpleGlimpse.Builder(MainActivity.this, NotificationActionReceiver.SIMPLE_NOTIFICATION_WITH_ACTION_REQUEST_CODE);
-
-                notificationId = builder
-                        .setContentTitle("With Action")
+                int notificationId = builder
+                        .setContentTitle("Example 2")
+                        .setContentText("Notification of type 2 with actions")
                         .addAction("Done")
-                        .addAction("Done1")
-                        .addAction("Done2")
+                        .addAction("Abort")
                         .build()
                         .send();
+                refreshActiveNotifications();
             }
         });
+
+        activeNotifications = (TextView) findViewById(R.id.active_notifications);
+        refreshActiveNotifications();
+    }
+
+    private void refreshActiveNotifications() {
+        Queue<Integer> list = GlimpseManager.getInstance(this).getActiveNotificationIds();
+        if (list.size() == 0) {
+            activeNotifications.setText("<none>");
+        } else {
+            String s = new String();
+            for (Integer i : list) {
+                s += i + "\n";
+            }
+            activeNotifications.setText(s);
+        }
     }
 }

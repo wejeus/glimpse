@@ -20,6 +20,8 @@ import android.support.annotation.StringRes;
  */
 public class GlimpseConfig {
 
+    public static final String packageName = "com.isalldigital.glimpse";
+
     public static final int MAX_NUM_CONCURRENT_NOTIFICATIONS_ALLOWED_BY_SYSTEM = 50;
 
     private static int appIcon;

@@ -10,7 +10,7 @@ public class ApplicationDelegate extends Application {
     public void onCreate() {
         super.onCreate();
 
-        GlimpseConfig.init(R.mipmap.ic_launcher, R.string.app_name, R.color.colorPrimary, 5);
+        GlimpseConfig.init(R.drawable.ic_launcher, R.string.app_name, R.color.colorPrimary, 5);
         GlimpseConfig.setReceiver(NotificationActionReceiver.class);
     }
 }

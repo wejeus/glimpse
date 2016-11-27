@@ -23,4 +23,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Append to notification"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textSize="16dp"
+        android:text="Active Notifications (ids)" />
+
+    <TextView
+        android:id="@+id/active_notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="List" />
 </LinearLayout>
