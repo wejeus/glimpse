@@ -1,14 +1,11 @@
 package com.isalldigital.glimpse;
 
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 
@@ -16,13 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.prefs.Preferences;
 
 import static com.isalldigital.glimpse.GlimpseActions.ACTION_1;
 import static com.isalldigital.glimpse.GlimpseActions.ACTION_2;
