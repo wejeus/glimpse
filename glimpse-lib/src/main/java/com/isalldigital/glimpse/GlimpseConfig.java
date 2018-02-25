@@ -15,7 +15,7 @@ import android.support.annotation.StringRes;
  * like TouchWiz (Samsung), Sense (HTC), MIUI (Xiaomi), EMUI (Huawei), etc.
  * After 50 notifications most manufacturers roll over and return 0 when trying to get notification id
  *
- * @See http://stackoverflow.com/questions/33364368/android-system-notification-limit-per-app
+ * @see http://stackoverflow.com/questions/33364368/android-system-notification-limit-per-app
  *
  */
 public class GlimpseConfig {

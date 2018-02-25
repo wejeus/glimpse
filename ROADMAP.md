@@ -8,8 +8,6 @@
 
 * Optional implement notification with customViews
 
-* Transition GlimpseConfig into builder pattern
-
 * TODO: Implement a service can listen for all notifications in system: https://developer.android.com/reference/android/service/notification/NotificationListenerService.html#getActiveNotifications() (GlimpseNotificationListenerService)
 
 * Implement type for "expanded layout" (uses a Notification.Style) https://developer.android.com/reference/android/app/Notification.Style.html Known Direct Subclasses BigPictureStyle, BigTextStyle, DecoratedCustomViewStyle, InboxStyle, MediaStyle, MessagingStyle

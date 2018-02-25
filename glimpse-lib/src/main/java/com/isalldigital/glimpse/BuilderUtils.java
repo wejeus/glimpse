@@ -7,22 +7,27 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
+import android.util.Log;
 
 public class BuilderUtils {
 
     public static NotificationCompat.Builder addDefaultActions(Context context, int id, int requestCode, NotificationCompat.Builder builder) {
-        Intent activateContentIntent = new Intent(context, GlimpseConfig.getReceiverClazz())
-                .setAction(GlimpseActions.ACTION_ACTIVATE_CONTENT)
-                .putExtra(GlimpseActions.EXTRA_NOTIFICATION_ID, id)
-                .putExtra(GlimpseActions.EXTRA_REQUEST_CODE, requestCode);
-        builder.setContentIntent(PendingIntent.getBroadcast(context, id, activateContentIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        Class receiver = GlimpseConfig.getReceiverClazz();
+        if (receiver != null) {
+            Intent activateContentIntent = new Intent(context, receiver)
+                    .setAction(GlimpseActions.ACTION_ACTIVATE_CONTENT)
+                    .putExtra(GlimpseActions.EXTRA_NOTIFICATION_ID, id)
+                    .putExtra(GlimpseActions.EXTRA_REQUEST_CODE, requestCode);
+            builder.setContentIntent(PendingIntent.getBroadcast(context, id, activateContentIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
-        Intent deleteIntent = new Intent(context, GlimpseConfig.getReceiverClazz())
-                .setAction(GlimpseActions.ACTION_DELETE)
-                .putExtra(GlimpseActions.EXTRA_NOTIFICATION_ID, id)
-                .putExtra(GlimpseActions.EXTRA_REQUEST_CODE, requestCode);
-        builder.setDeleteIntent(PendingIntent.getBroadcast(context, id, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-
+            Intent deleteIntent = new Intent(context, receiver)
+                    .setAction(GlimpseActions.ACTION_DELETE)
+                    .putExtra(GlimpseActions.EXTRA_NOTIFICATION_ID, id)
+                    .putExtra(GlimpseActions.EXTRA_REQUEST_CODE, requestCode);
+            builder.setDeleteIntent(PendingIntent.getBroadcast(context, id, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        } else {
+            Log.w("Glimpse", "No receiver set defined. No one will retrieve any actions.");
+        }
         return builder;
     }
 
@@ -31,10 +36,16 @@ public class BuilderUtils {
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static NotificationCompat.Builder addAction(Context context, int id, int requestCode, NotificationCompat.Builder builder, String action, String label) {
-        Intent intent = new Intent(context, GlimpseConfig.getReceiverClazz())
-                .putExtra(GlimpseActions.EXTRA_NOTIFICATION_ID, id)
-                .putExtra(GlimpseActions.EXTRA_REQUEST_CODE, requestCode)
-                .setAction(action);
+        Class receiver = GlimpseConfig.getReceiverClazz();
+        Intent intent = new Intent();
+        if (receiver != null) {
+            intent = new Intent(context, receiver)
+                    .putExtra(GlimpseActions.EXTRA_NOTIFICATION_ID, id)
+                    .putExtra(GlimpseActions.EXTRA_REQUEST_CODE, requestCode)
+                    .setAction(action);
+        } else {
+            Log.w("Glimpse", "No receiver set defined. No one will retrieve any actions.");
+        }
 
         NotificationCompat.Action notificationAction = new NotificationCompat.Action.Builder(
                 GlimpseConfig.getAppIcon(),
@@ -51,10 +62,16 @@ public class BuilderUtils {
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static NotificationCompat.Builder setInlineReplyAction(Context context, int id, int requestCode, NotificationCompat.Builder builder, String action, String label, String hint) {
-        Intent intent = new Intent(context, GlimpseConfig.getReceiverClazz())
-                .putExtra(GlimpseActions.EXTRA_NOTIFICATION_ID, id)
-                .putExtra(GlimpseActions.EXTRA_REQUEST_CODE, requestCode)
-                .setAction(action);
+        Class receiver = GlimpseConfig.getReceiverClazz();
+        Intent intent = new Intent();
+        if (receiver != null) {
+            intent = new Intent(context, receiver)
+                    .putExtra(GlimpseActions.EXTRA_NOTIFICATION_ID, id)
+                    .putExtra(GlimpseActions.EXTRA_REQUEST_CODE, requestCode)
+                    .setAction(action);
+        } else {
+            Log.w("Glimpse", "No receiver set defined. No one will retrieve any actions.");
+        }
 
         RemoteInput remoteInput = new RemoteInput.Builder(GlimpseActions.EXTRA_INLINE_MESSAGE)
                 .setLabel(hint)

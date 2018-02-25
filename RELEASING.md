@@ -1,7 +1,9 @@
 Releasing
 ========
 
- 1. Change the version in `gradle.properties` to a non-SNAPSHOT verson.
+pre: make sure maven settings are correct according to: https://github.com/chrisbanes/gradle-mvn-push
+
+ 1. Change the version in `gradle.properties` to a non-SNAPSHOT version.
  2. Update the `CHANGELOG.md` for the impending release.
  3. Update the `README.md` with the new version.
  4. `git commit -am "Prepare for release X.Y.Z."` (where X.Y.Z is the new version)
